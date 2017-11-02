@@ -14,12 +14,23 @@ var io = socketIO(server);
 //serve up our static web page
 app.use(express.static(publicPath));
 
+//Handles all socket connections
 io.on('connection', (socket) => {
     console.log('New user connected');
 
+    socket.emit('New message', {
+        from: "WowZaPowZa",
+        text: "Hey, whats going on?",
+        createAt: 123
+    });
+
+    socket.on('createMessage', (newMessage) => {
+        console.log('createMessage', newMessage);
+    });
+
     socket.on('disconnect' , () => {
         console.log('User was disconnected');
-    })
+    });
 });
 
 //server listen on current env port
