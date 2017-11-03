@@ -19,25 +19,28 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('New user connected');
 
+    //handles new user joining the chatroom
     socket.emit('newMessage', generateMessage('Admin', "Welcome to the chat app!"));
-
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user has joined the chatroom!'));
 
+    //Sends messages from a user to all users
     socket.on('createMessage', (message, callback) => {
         console.log('createMessage', message);
 
         io.emit('newMessage', generateMessage(message.from, message.text));
         callback('Message sent - Server');
-
-        // socket.broadcast.emit('newMessage', {
-        //         from: message.from,
-        //         text: message.text,
-        //         createdAt: new Date().getTime()
-        // });
     });
-
+    
+    //lets chatroom know a user has disconnected
     socket.on('disconnect' , () => {
         console.log('User was disconnected');
+        socket.broadcast.emit('newMessage', generateMessage('Admin', 'User has left the chatroom'));
+    });
+
+    //broadcasts a users location
+    socket.on('createLocationMessage', (coords) => {
+        console.log(coords.latitude, coords.longitude);
+        io.emit('newMessage', generateMessage('Admin', `${coords.latitude}, ${coords.longitude}`));
     });
 });
 

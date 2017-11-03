@@ -1,5 +1,8 @@
-var socket = io();
+var socket = io(); //Set up socket connection
 
+/** 
+//START: HANDLE INCOMING MESSAGES
+**/
 socket.on('connect' ,function() {
     console.log('connected to server');   
 
@@ -17,10 +20,20 @@ socket.on('newMessage', function(message) {
 
     jQuery('#messages').append(li);
 });
+/** 
+//END: HANDLE INCOMING MESSAGES
+**/
 
-let form = document.querySelector('#message-form');
-let input = document.querySelector('[name=message]');
+//DOM Variables
+const form = document.querySelector('#message-form');
+const input = document.querySelector('[name=message]');
+const locationButton = document.querySelector('#send-location');
 
+/** 
+//START: USER DATA SUBMISIONS
+**/
+
+//submit new message
 jQuery(form).on('submit', function(e) { 
     e.preventDefault(); //Prevents screen refresh on input submit
 
@@ -32,3 +45,24 @@ jQuery(form).on('submit', function(e) {
         input.value = '';
     });
 });
+
+//send location data
+jQuery(locationButton).on('click', function() {
+    if(!navigator.geolocation){
+        return alert('Geolocation not supported by your browser');
+    }
+
+    navigator.geolocation.getCurrentPosition(function(position){
+        console.log(position);
+        socket.emit('createLocationMessage', {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        });
+    }, function(){
+        alert('Unable to fetch your location')
+    });
+});
+
+/** 
+//END: USER DATA SUBMISIONS
+**/
