@@ -2,7 +2,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
@@ -15,7 +15,9 @@ var io = socketIO(server);
 //serve up our static web page
 app.use(express.static(publicPath));
 
-//Handles all socket connections
+/** 
+//START: HANDLES ALL SOCKET CONNECTIONS TO SERVER
+**/
 io.on('connection', (socket) => {
     console.log('New user connected');
 
@@ -30,7 +32,7 @@ io.on('connection', (socket) => {
         io.emit('newMessage', generateMessage(message.from, message.text));
         callback('Message sent - Server');
     });
-    
+
     //lets chatroom know a user has disconnected
     socket.on('disconnect' , () => {
         console.log('User was disconnected');
@@ -40,9 +42,12 @@ io.on('connection', (socket) => {
     //broadcasts a users location
     socket.on('createLocationMessage', (coords) => {
         console.log(coords.latitude, coords.longitude);
-        io.emit('newMessage', generateMessage('Admin', `${coords.latitude}, ${coords.longitude}`));
+        io.emit('newLocationMessage', generateLocationMessage('User', coords.latitude, coords.longitude));
     });
 });
+/** 
+//END: HANDLES ALL SOCKET CONNECTIONS TO SERVER
+**/
 
 //server listen on current env port
 server.listen(port, (err) => {

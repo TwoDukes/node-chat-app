@@ -12,12 +12,23 @@ socket.on('connect' ,function() {
     console.log('Disconnected from server');
 });
 
+//render new message to chat
 socket.on('newMessage', function(message) {
     console.log('newMessage', message);
     
     let li = jQuery('<li></li>');
     li.text(`${message.from}: ${message.text}`);
+    jQuery('#messages').append(li);
+});
 
+//render new location message to chat
+socket.on('newLocationMessage', function(message) {
+    let li = jQuery('<li></li>');
+    let a = jQuery('<a target="__blank">My current location</a>');
+
+    li.text(`${message.from}: `);
+    a.attr('href', message.url);
+    li.append(a);
     jQuery('#messages').append(li);
 });
 /** 
