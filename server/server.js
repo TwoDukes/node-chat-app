@@ -24,8 +24,8 @@ io.on('connection', (socket) => {
         createAt: 123
     });
 
-    socket.on('createMessage', (newMessage) => {
-        console.log('createMessage', newMessage);
+    socket.on('createMessage', (message) => {
+        console.log('createMessage', message);
     });
 
     socket.on('disconnect' , () => {

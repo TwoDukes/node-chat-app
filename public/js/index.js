@@ -13,6 +13,6 @@ socket.on('connect' ,function() {
     console.log('Disconnected from server');
 });
 
-socket.on('New message', function(message) {
-    console.log('New message', message);
+socket.on('NewMessage', function(message) {
+    console.log('NewMessage', message);
 });
