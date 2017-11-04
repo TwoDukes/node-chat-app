@@ -4,7 +4,7 @@ const timeFormat = 'h:mm a';
 
 var generateMessage = (from, text) => {
     let time = moment(moment().valueOf());
-    time.utcOffset("+19:00");
+    time.utcOffset("+17:00");
     return {
         from,
         text,
