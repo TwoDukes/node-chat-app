@@ -1,16 +1,22 @@
+const moment = require('moment');
+
+const timeFormat = 'h:mm a';
+
 var generateMessage = (from, text) => {
+    let time = moment(moment().valueOf());
     return {
         from,
         text,
-        createdAt: new Date().getTime()
+        createdAt: time.format(timeFormat)
     };
 };
 
 var generateLocationMessage = (from, latitude, longitude) => {
+    let time = moment(moment().valueOf());
     return {
         from,
         url: `https://www.google.com/maps?q=${latitude},${longitude}`,
-        createdAt: new Date().getTime()
+        createdAt: time.format(timeFormat)
     };
 };
 
