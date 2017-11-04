@@ -14,8 +14,7 @@ socket.on('connect' ,function() {
 
 //render new message to chat
 socket.on('newMessage', function(message) {
-    console.log('newMessage', message);
-    
+ 
     let li = jQuery('<li></li>');
     li.text(`${message.from}: ${message.text}`);
     jQuery('#messages').append(li);
@@ -37,7 +36,7 @@ socket.on('newLocationMessage', function(message) {
 
 //DOM Variables
 const form = document.querySelector('#message-form');
-const input = document.querySelector('[name=message]');
+const messageTextBox = document.querySelector('[name=message]');
 const locationButton = document.querySelector('#send-location');
 
 /** 
@@ -46,14 +45,13 @@ const locationButton = document.querySelector('#send-location');
 
 //submit new message
 jQuery(form).on('submit', function(e) { 
-    e.preventDefault(); //Prevents screen refresh on input submit
+    e.preventDefault(); //Prevents screen refresh on messageTextBox submit
 
     socket.emit('createMessage', {
         from: "User",
-        text: input.value //short hand query selector
+        text: messageTextBox.value //short hand query selector
     }, function(data) {
-        console.log(data);
-        input.value = '';
+        messageTextBox.value = '';
     });
 });
 
@@ -62,14 +60,23 @@ jQuery(locationButton).on('click', function() {
     if(!navigator.geolocation){
         return alert('Geolocation not supported by your browser');
     }
+    //disabled button and store inner html
+    let tempLocText = locationButton.innerHTML;
+    locationButton.setAttribute('disabled', 'disabled');
+    locationButton.innerHTML = "Sending Location...";
 
     navigator.geolocation.getCurrentPosition(function(position){
-        console.log(position);
         socket.emit('createLocationMessage', {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
         });
+        //re-enable button and reset inner html
+        locationButton.removeAttribute('disabled');
+        locationButton.innerHTML = tempLocText;
     }, function(){
+        //re-enable button and reset inner html
+        locationButton.setAttribute('disabled');
+        locationButton.innerHTML = tempLocText;
         alert('Unable to fetch your location')
     });
 });
