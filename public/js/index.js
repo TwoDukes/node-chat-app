@@ -23,10 +23,7 @@ socket.on('newMessage', function(message) {
     });
 
     jQuery('#messages').append(html);
- 
-    // let li = jQuery('<li></li>');
-    // li.text(`${message.createdAt} ${message.from}: ${message.text}`);
-    // jQuery('#messages').append(li);
+    scrollToBotton();
 });
 
 //render new location message to chat
@@ -40,14 +37,7 @@ socket.on('newLocationMessage', function(message) {
     });
     
     jQuery('#messages').append(html);
-    
-    // let li = jQuery('<li></li>');
-    // let a = jQuery('<a target="__blank">My current location</a>');
-
-    // li.text(`${message.createdAt} ${message.from}: `);
-    // a.attr('href', message.url);
-    // li.append(a);
-    // jQuery('#messages').append(li);
+    scrollToBotton();
 });
 /** 
 //END: HANDLE INCOMING MESSAGES
@@ -103,3 +93,21 @@ jQuery(locationButton).on('click', function() {
 /** 
 //END: USER DATA SUBMISIONS
 **/
+
+//Handles auroscrolling to new messages in chat
+function scrollToBotton(){
+    //Selectors
+    let messages = jQuery('#messages');
+    let newMessage = messages.children('li:last-child');
+    //Heights
+    let clientHeight = messages.prop('clientHeight');
+    let scrollTop = messages.prop('scrollTop');
+    let scrollHeight = messages.prop('scrollHeight');
+    let newMessageHeight = newMessage.innerHeight();
+    let lastMessageHeight = newMessage.prev().innerHeight();
+    const offset = 20;
+
+    if(clientHeight + scrollTop + newMessageHeight + lastMessageHeight + offset >= scrollHeight){
+        messages.animate({ scrollTop: scrollHeight }, 200);
+    }
+}
