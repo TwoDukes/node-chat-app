@@ -4,12 +4,29 @@ var socket = io(); //Set up socket connection
 //START: HANDLE INCOMING MESSAGES
 **/
 socket.on('connect' ,function() {
-    console.log('connected to server');   
-
+    
+    //Joins room passing user and room name data
+    let params = jQuery.deparam(window.location.search);
+    socket.emit('join', params, function(err) {
+        if(err){
+            alert(err);
+            window.location.href = '/';
+        }else {
+            console.log("No error");
+        }
+    });
 });
 
  socket.on('disconnect', function() {
     console.log('Disconnected from server');
+});
+
+socket.on('updateUserList', function(users){
+    let ol = jQuery('<ol></ol>');
+    users.forEach(function(user) {
+        ol.append(jQuery("<li></li>").text(user));
+    });
+    jQuery('#users').html(ol);
 });
 
 //render new message to chat
@@ -58,7 +75,7 @@ jQuery(form).on('submit', function(e) {
 
     socket.emit('createMessage', {
         from: "User",
-        text: messageTextBox.value //short hand query selector
+        text: messageTextBox.value 
     }, function(data) {
         messageTextBox.value = '';
     });

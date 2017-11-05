@@ -3,6 +3,8 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 const {generateMessage, generateLocationMessage} = require('./utils/message');
+const {isRealString} = require('./utils/validation');
+const {Users} = require('./utils/users');
 
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
@@ -15,6 +17,9 @@ var io = socketIO(server);
 //serve up our static web page
 app.use(express.static(publicPath));
 
+//Initialize users list
+let users = new Users();
+
 /** 
 //START: HANDLES ALL SOCKET CONNECTIONS TO SERVER
 **/
@@ -22,8 +27,29 @@ io.on('connection', (socket) => {
     console.log('New user connected');
 
     //handles new user joining the chatroom
-    socket.emit('newMessage', generateMessage('Admin', "Welcome to the chat app!"));
-    socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user has joined the chatroom!'));
+
+
+    socket.on('join', (params, callback) => {
+        //Check to see if user filled out neccesary data
+        if(!isRealString(params.name) || !isRealString(params.room)){
+            callback('Display Name and Room name are required')
+        }
+
+        //join new socket room
+        socket.join(params.room);
+
+        //Update user listing
+        users.removeUser(socket.id);
+        users.addUser(socket.id, params.name, params.room);
+
+        //Update user list inside specified socket room
+        io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+
+        //Tell chat new user joined and let user know they have entered the chat
+        socket.emit('newMessage', generateMessage('Admin', "Welcome to the chat app!"));
+        socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined the chat!`));
+        callback();
+    });
 
     //Sends messages from a user to all users
     socket.on('createMessage', (message, callback) => {
@@ -33,17 +59,22 @@ io.on('connection', (socket) => {
         callback('Message sent - Server');
     });
 
-    //lets chatroom know a user has disconnected
-    socket.on('disconnect' , () => {
-        console.log('User was disconnected');
-        socket.broadcast.emit('newMessage', generateMessage('Admin', 'User has left the chatroom'));
-    });
-
-    //broadcasts a users location
+    //broadcasts a users location to all users
     socket.on('createLocationMessage', (coords) => {
-        console.log(coords.latitude, coords.longitude);
+        console.log('createLocationMessage', coords.latitude, coords.longitude);
         io.emit('newLocationMessage', generateLocationMessage('User', coords.latitude, coords.longitude));
     });
+
+    //lets chatroom know a user has disconnected and updates user list
+    socket.on('disconnect', () => {
+        let user = users.removeUser(socket.id);
+
+        if(user){
+            io.to(user.room).emit('updateUserList', users.getUserList(user.room));
+            io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left the chatroom`));
+        }
+    });
+
 });
 /** 
 //END: HANDLES ALL SOCKET CONNECTIONS TO SERVER
