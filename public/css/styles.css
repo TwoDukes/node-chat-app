@@ -148,6 +148,13 @@
     padding: 10px;
     flex-grow: 1;
   }
+
+  .chat__footer textarea {
+    border: none;
+    padding: 10px;
+    flex-grow: 1;
+    resize: none;
+  }
   
   .chat__messages {
     list-style-type: none;
@@ -156,6 +163,10 @@
   
   .message {
     padding: 10px;
+  }
+
+  .message__text {
+    white-spacE: pre 
   }
   
   .message__title {
