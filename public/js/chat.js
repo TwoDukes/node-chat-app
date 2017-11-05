@@ -7,6 +7,9 @@ socket.on('connect' ,function() {
     
     //Joins room passing user and room name data
     let params = jQuery.deparam(window.location.search);
+    //set room name to be case independant
+    params.room = params.room.toLowerCase();
+    //emit join request
     socket.emit('join', params, function(err) {
         if(err){
             alert(err);
@@ -76,7 +79,7 @@ jQuery(form).on('submit', function(e) {
     socket.emit('createMessage', {
         from: "User",
         text: messageTextBox.value 
-    }, function(data) {
+    }, function() {
         messageTextBox.value = '';
     });
 });

@@ -51,18 +51,23 @@ io.on('connection', (socket) => {
         callback();
     });
 
-    //Sends messages from a user to all users
+    //Sends messages from a user to all users in socket room
     socket.on('createMessage', (message, callback) => {
-        console.log('createMessage', message);
+        let user = users.getUser(socket.id);
 
-        io.emit('newMessage', generateMessage(message.from, message.text));
-        callback('Message sent - Server');
+        if(user && isRealString(message.text)){
+            io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+        }
+        callback();
     });
 
-    //broadcasts a users location to all users
+    //broadcasts a users location to all users in socket room
     socket.on('createLocationMessage', (coords) => {
-        console.log('createLocationMessage', coords.latitude, coords.longitude);
-        io.emit('newLocationMessage', generateLocationMessage('User', coords.latitude, coords.longitude));
+        let user = users.getUser(socket.id);
+
+        if(user){
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+        }
     });
 
     //lets chatroom know a user has disconnected and updates user list
