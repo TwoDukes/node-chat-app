@@ -61,5 +61,6 @@ jQuery(dropdownBtn).click(function(){
 //adds room clicked on into Room name textbox
 jQuery(dropdownHolder).click(function(event){
     let roomName = event.target.getAttribute('data-room');
-    roomTextBox.val(roomName);
+    if(roomName != null)
+        roomTextBox.val(roomName);
 });

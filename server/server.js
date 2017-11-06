@@ -37,9 +37,10 @@ io.on('connection', (socket) => {
         }
 
         //Checks to see if a user already has a name that a new user is trying to use
-        if(params.name === users.getUserList(params.room).filter((name) => params.name === name)[0]){
-            callback('User in room already has that Display Name')
+        if(users.getUserList(params.room).filter((name) => params.name.toLowerCase() === name.toLowerCase()).length > 0){
+             callback('User in room already has that Display Name')
         }
+        
 
         //join new socket room
         socket.join(params.room);
