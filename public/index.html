@@ -24,10 +24,44 @@
                     <input type="text" name="room"/>
             </div>
             <div class="form-field">
+                <button type="button" id="dropbtn">Room Lists</button>
+            </div>
+            <div id="myDropdown" class="dropdown-content">
+                <p>test</p>
+            </div>
+
+            <div class="form-field">
                 <button>Join</button>
             </div>
         </form>
     </div>
+
+
+        <!--START: TEMPLATE FOR ROOM LISTS-->
+        <script id="room-list-template" type="text/template">
+            <li class='room'>
+                <div class="room__title">
+                    <h4>Room: {{name}}</h4>
+                    
+                    <span>| Users: {{userCount}}</span>
+                </div>
+            </li>
+        </script>
+
+        <script id="no-room-template" type="text/template">
+            <li class='room'>
+                <div class="room__title">
+                    <h4>{{name}}</h4>
+                </div>
+            </li>
+        </script>
+        <!--END: TEMPLATE FOR ROOM LISTS-->
     
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/libs/jquery-3.2.1.min.js"></script>
+    <script src="/js/libs/mustache.js"></script>
+    <script src="/js/libs/deparam.js"></script>
+    <script src="/js/index.js"></script>
 </body>
 </html>
