@@ -4,6 +4,8 @@
 //     userCount: 25
 // }]
 
+const {isRealString} = require('./validation');
+
 class Rooms {
     constructor(){
         this.rooms = [];
@@ -11,19 +13,21 @@ class Rooms {
 
     //create a new user
     addToRoom(name){
-        let curRoom = this.rooms.filter((room) => name === room.name);
-        
-        //if room exists
-        if(curRoom.length > 0){
-            curRoom[0].userCount++;
-            return curRoom[0];
-        }else{
-            let newRoom = {
-                name: name,
-                userCount: 1
+
+            if(isRealString(name)){
+            let curRoom = this.rooms.filter((room) => name === room.name);
+            //if room exists
+            if(curRoom.length > 0){
+                curRoom[0].userCount++;
+                return curRoom[0];
+            }else{
+                let newRoom = {
+                    name: name,
+                    userCount: 1
+                }
+                this.rooms.push(newRoom);
+                return newRoom;
             }
-            this.rooms.push(newRoom);
-            return newRoom;
         }
     }
     
