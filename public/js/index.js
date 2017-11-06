@@ -66,12 +66,15 @@ jQuery(dropdownHolder).click(function(event){
         roomTextBox.val(roomName);
 });
 
+//Handle form submission and textbox error checking
 jQuery(form).on('submit', function(e) { 
-    e.preventDefault(); //Prevents screen refresh on messageTextBox submit
+    e.preventDefault(); //Prevents screen refresh on form submit
 
+    //checks if name and room name textbox are filled correctly
     if(!isRealString(nameTextBox.val()) || !isRealString(roomTextBox.val())){
         return alert('Display Name and Room name are required');
     } else{
+        //generate url based on form data and sent user to new chat room
         const url = `/chat.html?${jQuery.param({name: nameTextBox.val(), room: roomTextBox.val()})}`;
         window.location.href = url;
     }
