@@ -1,7 +1,8 @@
 var socket = io(); //Set up socket connection
 
-
-const roomTextBox = jQuery('[name=room]')
+const form = jQuery('#join-form');
+const nameTextBox = jQuery('[name=name]');
+const roomTextBox = jQuery('[name=room]');
 const dropdownBtn = jQuery('#dropbtn');
 const dropdownHolder = jQuery('#myDropdown');
 
@@ -64,3 +65,20 @@ jQuery(dropdownHolder).click(function(event){
     if(roomName != null)
         roomTextBox.val(roomName);
 });
+
+jQuery(form).on('submit', function(e) { 
+    e.preventDefault(); //Prevents screen refresh on messageTextBox submit
+
+    if(!isRealString(nameTextBox.val()) || !isRealString(roomTextBox.val())){
+        return alert('Display Name and Room name are required');
+    } else{
+        const url = `/chat.html?${jQuery.param({name: nameTextBox.val(), room: roomTextBox.val()})}`;
+        window.location.href = url;
+    }
+});
+
+
+
+function isRealString(str){
+    return typeof str === 'string' && str.trim().length > 0;
+};

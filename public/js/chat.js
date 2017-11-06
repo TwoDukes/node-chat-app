@@ -12,11 +12,9 @@ socket.on('connect' ,function() {
     //emit join request
     socket.emit('join', params, function(err) {
         if(err){
+            socket.emit('disconnect');
             alert(err);
             window.location.href = '/';
-            socket.on('disconnect', function() {
-                
-            });
         }else {
             console.log("No error");
         }
@@ -24,7 +22,7 @@ socket.on('connect' ,function() {
 });
 
  socket.on('disconnect', function() {
-
+    //does nothing currently
 });
 
 socket.on('updateUserList', function(users){
