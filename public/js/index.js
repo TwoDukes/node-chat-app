@@ -1,5 +1,7 @@
 var socket = io(); //Set up socket connection
 
+
+const roomTextBox = jQuery('[name=room]')
 const dropdownBtn = jQuery('#dropbtn');
 const dropdownHolder = jQuery('#myDropdown');
 
@@ -53,5 +55,11 @@ socket.on('updateRoomList', function(rooms){
 **/
 
 jQuery(dropdownBtn).click(function(){
-    dropdownHolder.toggleClass('show', 500);
+    dropdownHolder.toggleClass('show');
+}); 
+
+//adds room clicked on into Room name textbox
+jQuery(dropdownHolder).click(function(event){
+    let roomName = event.target.getAttribute('data-room');
+    roomTextBox.val(roomName);
 });

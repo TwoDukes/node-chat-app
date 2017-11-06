@@ -14,6 +14,7 @@ class Rooms {
     //create a new user
     addToRoom(name){
 
+            //if user entered a real string
             if(isRealString(name)){
             let curRoom = this.rooms.filter((room) => name === room.name);
             //if room exists
