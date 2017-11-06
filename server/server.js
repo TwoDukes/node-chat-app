@@ -19,7 +19,7 @@ var io = socketIO(server);
 
 //serve up our static web page
 app.use(express.static(publicPath));
-//app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
 
 //Initialize users list
 let users = new Users();
