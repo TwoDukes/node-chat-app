@@ -14,6 +14,9 @@ socket.on('connect' ,function() {
         if(err){
             alert(err);
             window.location.href = '/';
+            socket.on('disconnect', function() {
+                
+            });
         }else {
             console.log("No error");
         }
