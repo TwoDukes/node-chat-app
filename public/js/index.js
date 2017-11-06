@@ -13,6 +13,14 @@ const dropdownHolder = jQuery('#myDropdown');
 **/
 socket.on('connect' ,function() {
     console.log('connected to server');
+    //pull data from local storage
+    const stringData = window.localStorage.getItem('joinData');
+    if(stringData){
+        //filling textboxes with localstorage data
+        const data = JSON.parse(stringData);
+        nameTextBox.val(data.name); 
+        roomTextBox.val(data.room);
+    }
 });
 
  socket.on('disconnect', function() {
@@ -74,12 +82,13 @@ jQuery(form).on('submit', function(e) {
     if(!isRealString(nameTextBox.val()) || !isRealString(roomTextBox.val())){
         return alert('Display Name and Room name are required');
     } else{
+        //generate localstorage object for next visit to site
+        window.localStorage.setItem('joinData', JSON.stringify( {name: nameTextBox.val(), room: roomTextBox.val()}));
         //generate url based on form data and sent user to new chat room
         const url = `/chat.html?${jQuery.param({name: nameTextBox.val(), room: roomTextBox.val()})}`;
         window.location.href = url;
     }
 });
-
 
 
 function isRealString(str){
