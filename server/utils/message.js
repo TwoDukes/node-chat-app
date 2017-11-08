@@ -4,7 +4,7 @@ const timeFormat = 'h:mm a';
 
 var generateMessage = (from, text) => {
     let time = moment(moment().valueOf());
-    time.utcOffset("+17:00");
+    time.utcOffset("+16:00");
     return {
         from,
         text,
@@ -14,7 +14,7 @@ var generateMessage = (from, text) => {
 
 var generateLocationMessage = (from, latitude, longitude) => {
     let time = moment(moment().valueOf());
-    time.utcOffset("+17:00");
+    time.utcOffset("+16:00");
     return {
         from,
         url: `https://www.google.com/maps?q=${latitude},${longitude}`,
