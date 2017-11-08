@@ -37,6 +37,10 @@ socket.on('updateUserList', function(users){
 socket.on('newMessage', function(message) {
 
     if(!document.hasFocus()){ //if window is not in focus then play notification sound
+        if(audio.duration > 0 && !audio.paused) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
         audio.play();
     }
 
