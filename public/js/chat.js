@@ -36,6 +36,10 @@ socket.on('updateUserList', function(users){
 //render new message to chat
 socket.on('newMessage', function(message) {
 
+    if(!document.hasFocus()){ //if window is not in focus then play notification sound
+        audio.play();
+    }
+
     let template = jQuery('#message-template').html();
     let html = Mustache.render(template, {
         from: message.from,
@@ -68,6 +72,9 @@ socket.on('newLocationMessage', function(message) {
 const form = document.querySelector('#message-form');
 const messageTextBox = document.querySelector('[name=message]');
 const locationButton = document.querySelector('#send-location');
+var audio = new Audio('../audio/Tiny Button Push-SoundBible.com-513260752.mp3');
+audio.volume = 0.3;
+audio.play();
 
 /** 
 //START: USER DATA SUBMISIONS
