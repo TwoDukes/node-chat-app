@@ -33,6 +33,9 @@ socket.on('updateUserList', function(users){
     jQuery('#users').html(ol);
 });
 
+
+//TODO:create a dynamic mesaage systen fot pictures links, and multiline input
+
 //render new message to chat
 socket.on('newMessage', function(message) {
 
