@@ -62,7 +62,7 @@ io.on('connection', (socket) => {
         //Tell chat new user joined and let user know they have entered the chat
         socket.emit('newMessage', generateMessage('Admin', "Welcome to the chat app!"));
         socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined the chat!`));
-        callback();
+        callback(); //may be unnecesary after changes
     });
 
 
